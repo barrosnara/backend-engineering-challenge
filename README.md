@@ -1,15 +1,43 @@
-# Bakckend Engineering Challenge
+# Backend Engineering Challenge
 
+Hi all! Here you can find the solution I implemented for the backend engineering challenge.
 
-Welcome to our Engineering Challenge repository 🖖
+### *Prerequisites*
+This project was developed for Python 3.7 and uses the packages in the requirements.txt file. Please run
 
-If you found this repository it probably means that you are participating in our recruitment process. Thank you for your time and energy. If that's not the case please take a look at our [openings](https://unbabel.com/careers/) and apply!
+    pip install -r requirements.txt 
+    
+to install the exact versions used during development.
 
-Please fork this repo before you start working on the challenge, read it careful and take your time and think about the solution. Also, please fork this repository because we will evaluate the code on the fork.
+### *Usage*
+This CLI application has six arguments, which the first two are mandatory. Please run
 
-This is an opportunity for us both to work together and get to know each other in a more technical way. If have some doubt please open and issue and we'll reach out to help.
+    unbabel_cli --help
+    
+in order to get more information:
 
-Good luck!
+    unbabel_cli.py [-h] --input_file INPUT_FILE --window_size WINDOW_SIZE
+                   [--output_file OUTPUT_FILE] [--client_name CLIENT_NAME]
+                   [--source_language SOURCE_LANGUAGE]
+                   [--target_language TARGET_LANGUAGE]
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      --input_file INPUT_FILE
+                            path to a json file containing the stream of events to be analysed
+      --window_size WINDOW_SIZE
+                            time window (in minutes) to be considered on the moving average calculation
+      --output_file OUTPUT_FILE
+                            path to where the aggregated output is going to be export (json file)
+      --client_name CLIENT_NAME
+                            specify a client name in order to calculated his KPI
+      --source_language SOURCE_LANGUAGE
+                            specify a source language in order to calculate its KPI
+      --target_language TARGET_LANGUAGE
+                            specify a target language in order to calculate its KPI
+
+Note that the last three field are accumulative, i.e. if you e.g. specify a client name and a source language you will get the KPI for that client considering the specified source language (disregards all the other entries).
+
 
 ## Challenge Scenario
 
@@ -67,22 +95,3 @@ The output file would be something in the following format.
 {"date": "2018-12-26 18:23:00", "average_delivery_time": 31}
 {"date": "2018-12-26 18:24:00", "average_delivery_time": 42.5}
 ```
-
-#### Notes
-
-Before jumping right into implementation we advise you to think about the solution first. We will evaluate, not only if your solution works but also the following aspects:
-
-+ Simple and easy to read code. Remember that [simple is not easy](https://www.infoq.com/presentations/Simple-Made-Easy)
-+ Include a README.md that briefly describes how to build and run your code
-+ Be consistent in your code. 
-
-Feel free to, in your solution, include some your considerations while doing this challenge. We want you to solve this challenge in the language you feel most confortable with. Our machines run Python, Ruby, Scala, Java, Clojure, Elixir and Nodejs. If you are thinking of using any other programming language please reach out to us first 🙏.
-
-Also if you have any problem please **open an issue**. 
-
-Good luck and may the force be with you
-
-#### Extra points
-
-If you feeling creative feel free to consider any additional cases you might find interesting. Remember this is a bonus, focus on delivering the solution first.
-
