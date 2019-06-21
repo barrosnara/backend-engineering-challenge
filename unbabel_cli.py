@@ -55,7 +55,7 @@ def check_window_size(window_size):
     :param window_size: time window to be considered in the moving average calculation
     :return: an error message if its value is not a positive integer
     """
-    if window_size < 0:
+    if window_size <= 0:
         print("Error! window size must be greater than 0")
         sys.exit(1)
 
@@ -69,6 +69,7 @@ def convert_events_timestamp(events_list):
     try:
         for event in events_list:
             event['timestamp'] = datetime.strptime(str(event['timestamp']), '%Y-%m-%d %H:%M:%S.%f')
+        return events_list
     except ValueError as ve:
         print("Error! cannot convert timestamp string to a valid datetime: " + str(ve))
         sys.exit(1)
@@ -81,7 +82,7 @@ def check_event_name(events_list):
     """
     for event in events_list:
         if event['event_name'] != 'translation_delivered':
-            print("Error! input file should only contain translations delivered: " + event)
+            print("Error! input file should only contain translations delivered: " + event['event_name'])
             sys.exit(1)
 
 
@@ -94,7 +95,7 @@ def check_events_durations(events_list):
         if event['duration'] >= 0 and isinstance(event['duration'], int):
             pass
         else:
-            print("Error! duration has to be a non-negative integer: " + event)
+            print("Error! duration has to be a non-negative integer: " + str(event['duration']))
             sys.exit(1)
 
 
@@ -112,11 +113,11 @@ def check_events(events_list, dict_keys_list):
     else:
         for event in events_list:
             if all(key in event for key in dict_keys_list):
-                convert_events_timestamp(events_list)
+                events_list = convert_events_timestamp(events_list)
                 check_event_name(events_list)
                 check_events_durations(events_list)
             else:
-                print("Error! input file does not follow the expected structure: " + event)
+                print("Error! input file does not follow the expected structure: " + str(event))
                 sys.exit(1)
 
 
@@ -137,10 +138,10 @@ def check_client(events_list, client_name):
              an error message if no event meets the condition
     """
     events_list_filtered = list(filter(lambda event: event['client_name'] == client_name, events_list))
-    if events_list_filtered.count() > 0:
+    if len(events_list_filtered) > 0:
         return events_list_filtered
     else:
-        print("Error! no results found for " + client_name)
+        print("Error! no results found for client name " + client_name)
         sys.exit(1)
 
 
@@ -153,13 +154,13 @@ def check_source_language(events_list, source_language, client_name):
              an error message if no event meets the condition(s)
     """
     events_list_filtered = list(filter(lambda event: event['source_language'] == source_language, events_list))
-    if events_list_filtered.count() > 0:
+    if len(events_list_filtered) > 0:
         return events_list_filtered
     else:
         if client_name is not None:
-            print("Error! no results found for " + client_name + ' and ' + source_language)
+            print("Error! no results found for client name " + client_name + ' and source language ' + source_language)
         else:
-            print("Error! no results found for " + source_language)
+            print("Error! no results found for source language " + source_language)
         sys.exit(1)
 
 
@@ -173,20 +174,22 @@ def check_target_language(events_list, target_language, client_name, source_lang
              an error message if no event meets the condition(s)
     """
     events_list_filtered = list(filter(lambda event: event['target_language'] == target_language, events_list))
-    if events_list_filtered.count() > 0:
+    if len(events_list_filtered) > 0:
         return events_list_filtered
     else:
         if client_name is not None or source_language is not None:
             if client_name is not None:
                 if source_language is not None:
-                    print("Error! no results found for " + client_name + ', ' + source_language + ' and ' +
-                          target_language)
+                    print("Error! no results found for client name " + client_name + ', source language ' +
+                          source_language + ' and target language ' + target_language)
                 else:
-                    print("Error! no results found for " + client_name + ' and ' + target_language)
+                    print("Error! no results found for client name " + client_name + ' and target language ' +
+                          target_language)
             else:
-                print("Error! no results found for " + source_language + ' and ' + target_language)
+                print("Error! no results found for source language " + source_language + ' and target language ' +
+                      target_language)
         else:
-            print("Error! no results found for " + target_language)
+            print("Error! no results found for target language " + target_language)
         sys.exit(1)
 
 
